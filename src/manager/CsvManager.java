@@ -8,9 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Singleton per la gestione della lettura e scrittura dei file CSV
- */
+
 public class CsvManager {
     private static CsvManager instance;
     private static final String ISCRITTI_FILE = "iscritti.csv";
@@ -26,10 +24,7 @@ public class CsvManager {
         return instance;
     }
 
-    /**
-     * Salva la lista degli iscritti su file CSV
-     * @param iscritti Lista degli iscritti da salvare
-     */
+
     public void salvaIscritti(List<Iscritto> iscritti) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ISCRITTI_FILE))) {
             writer.println("nome,cognome,codiceIdentificativo");
@@ -44,14 +39,10 @@ public class CsvManager {
         }
     }
 
-    /**
-     * Carica la lista degli iscritti dal file CSV
-     * @return Lista degli iscritti caricati
-     */
+
     public List<Iscritto> caricaIscritti() {
         List<Iscritto> iscritti = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ISCRITTI_FILE))) {
-            // Salta l'header
             reader.readLine();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -61,15 +52,10 @@ public class CsvManager {
                 }
             }
         } catch (IOException e) {
-            // Se il file non esiste, restituisce una lista vuota
         }
         return iscritti;
     }
 
-    /**
-     * Salva la lista degli abbonamenti su file CSV
-     * @param abbonamenti Lista degli abbonamenti da salvare
-     */
     public void salvaAbbonamenti(List<Abbonamento> abbonamenti) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ABBONAMENTI_FILE))) {
             writer.println("tipo,dataInizio,dataFine,codiceIscritto");
@@ -85,10 +71,7 @@ public class CsvManager {
         }
     }
 
-    /**
-     * Carica la lista degli abbonamenti dal file CSV
-     * @return Lista degli abbonamenti caricati
-     */
+
     public List<Abbonamento> caricaAbbonamenti() {
         List<Abbonamento> abbonamenti = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ABBONAMENTI_FILE))) {
@@ -112,8 +95,11 @@ public class CsvManager {
                 }
             }
         } catch (IOException e) {
-            // Se il file non esiste, restituisce una lista vuota
         }
         return abbonamenti;
     }
-} 
+}
+
+//ManagerCsv salva sul file CSV abbonamenti e iscritti separatamente, uso del HashMap per aggiungere iscritti
+//e abbonamenti contemporaneamente,aggiungere ad ogni nuova iscrizione, caricamento automatico all' avvio.
+//Crea una nuova classe che si occupi di gestire un HashMap con Iscritto, e Storico Abbonamenti, ovvero un Array list di abbonamenti

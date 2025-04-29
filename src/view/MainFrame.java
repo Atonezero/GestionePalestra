@@ -52,4 +52,10 @@ public class MainFrame extends JFrame {
         add(menuPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
     }
-} 
+}
+
+//Usa un solo MainFrame con all'interno un CardLayout che gestitsca tutti i
+//Panel(AggiungiIscrittoPanel, RicercaIscrittoPanel, VisualizzaAbbonamentiPanel ...).
+//Crea una classe MainPresenter, che fa da tramite tra il model e la view,
+// e si occupa di gestire i dati sulla base, ad esempio, di un azione nella view(se clicco il pulsante aggiungiPersona,
+// richiama la funzione nel Manager degli Iscritti).

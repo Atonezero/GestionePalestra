@@ -2,17 +2,12 @@ package model;
 
 import java.time.LocalDate;
 
-/**
- * Implementazione di un abbonamento annuale
- */
+
 public class AbbonamentoAnnuale implements Abbonamento {
     private LocalDate dataInizio;
     private LocalDate dataFine;
 
-    /**
-     * Costruttore per creare un nuovo abbonamento annuale
-     * @param dataInizio Data di inizio dell'abbonamento
-     */
+
     public AbbonamentoAnnuale(LocalDate dataInizio) {
         this.dataInizio = dataInizio;
         this.dataFine = dataInizio.plusYears(1);

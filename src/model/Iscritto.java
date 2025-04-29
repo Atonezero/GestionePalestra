@@ -3,9 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe che rappresenta un iscritto alla palestra
- */
+
 public class Iscritto {
     private String nome;
     private String cognome;
@@ -13,12 +11,7 @@ public class Iscritto {
     private List<Abbonamento> abbonamentiAttivi;
     private List<Abbonamento> storicoAbbonamenti;
 
-    /**
-     * Costruttore per creare un nuovo iscritto
-     * @param nome Nome dell'iscritto
-     * @param cognome Cognome dell'iscritto
-     * @param codiceIdentificativo Codice univoco dell'iscritto
-     */
+
     public Iscritto(String nome, String cognome, String codiceIdentificativo) {
         this.nome = nome;
         this.cognome = cognome;

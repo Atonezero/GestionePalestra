@@ -2,17 +2,11 @@ package model;
 
 import java.time.LocalDate;
 
-/**
- * Implementazione di un abbonamento mensile
- */
+
 public class AbbonamentoMensile implements Abbonamento {
     private LocalDate dataInizio;
     private LocalDate dataFine;
 
-    /**
-     * Costruttore per creare un nuovo abbonamento mensile
-     * @param dataInizio Data di inizio dell'abbonamento
-     */
     public AbbonamentoMensile(LocalDate dataInizio) {
         this.dataInizio = dataInizio;
         this.dataFine = dataInizio.plusMonths(1);
