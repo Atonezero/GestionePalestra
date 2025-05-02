@@ -30,7 +30,7 @@ public class AbbonamentiManager {
 
 
     public void aggiungiAbbonamentoMensile(Iscritto iscritto, LocalDate dataInizio) {
-        Abbonamento abbonamento = new AbbonamentoMensile(dataInizio);
+        Abbonamento abbonamento = new AbbonamentoMensile(dataInizio, iscritto.getCodiceIdentificativo());
         iscritto.aggiungiAbbonamentoAttivo(abbonamento);
         abbonamenti.add(abbonamento);
         csvManager.salvaAbbonamenti(abbonamenti);
@@ -38,7 +38,7 @@ public class AbbonamentiManager {
 
 
     public void aggiungiAbbonamentoAnnuale(Iscritto iscritto, LocalDate dataInizio) {
-        Abbonamento abbonamento = new AbbonamentoAnnuale(dataInizio);
+        Abbonamento abbonamento = new AbbonamentoAnnuale(dataInizio, iscritto.getCodiceIdentificativo());
         iscritto.aggiungiAbbonamentoAttivo(abbonamento);
         abbonamenti.add(abbonamento);
         csvManager.salvaAbbonamenti(abbonamenti);

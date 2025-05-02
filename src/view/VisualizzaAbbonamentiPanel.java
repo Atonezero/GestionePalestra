@@ -4,11 +4,11 @@ import model.Iscritto;
 import model.Abbonamento;
 import manager.IscrittiManager;
 import manager.AbbonamentiManager;
+import presenter.MainPresenter;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Pannello per la visualizzazione degli abbonamenti
@@ -19,8 +19,14 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
     private JTable abbonamentiTable;
     private DefaultTableModel tableModel;
     private JTabbedPane tabbedPane;
+    private MainPresenter presenter;
 
-    public VisualizzaAbbonamentiPanel() {
+    public VisualizzaAbbonamentiPanel(MainPresenter presenter) {
+        this.presenter = presenter;
+        initComponents();
+    }
+
+    private void initComponents() {
         setLayout(new BorderLayout());
 
         // Pannello superiore per la ricerca
@@ -73,13 +79,11 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
                 return;
             }
 
-            Optional<Iscritto> iscritto = IscrittiManager.getInstance().cercaIscritto(codice);
-            if (iscritto.isPresent()) {
-                Iscritto i = iscritto.get();
-                
+            Iscritto iscritto = presenter.cercaIscritto(codice);
+            if (iscritto != null) {
                 // Aggiorna tabella abbonamenti attivi
                 tableModel.setRowCount(0);
-                for (Abbonamento a : i.getAbbonamentiAttivi()) {
+                for (Abbonamento a : presenter.getAbbonamentiAttivi(iscritto)) {
                     Object[] rowData = {
                         a.getTipo(),
                         a.getDataInizio(),
@@ -90,7 +94,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
 
                 // Aggiorna tabella storico
                 storicoModel.setRowCount(0);
-                for (Abbonamento a : i.getStoricoAbbonamenti()) {
+                for (Abbonamento a : presenter.getStoricoAbbonamenti(iscritto)) {
                     Object[] rowData = {
                         a.getTipo(),
                         a.getDataInizio(),

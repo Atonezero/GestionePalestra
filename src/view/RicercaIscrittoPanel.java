@@ -1,7 +1,9 @@
 package view;
 
 import model.Iscritto;
+import model.Abbonamento;
 import manager.IscrittiManager;
+import presenter.MainPresenter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,8 +17,14 @@ public class RicercaIscrittoPanel extends JPanel {
     private JTextField codiceField;
     private JButton cercaButton;
     private JTextArea risultatoArea;
+    private MainPresenter presenter;
 
-    public RicercaIscrittoPanel() {
+    public RicercaIscrittoPanel(MainPresenter presenter) {
+        this.presenter = presenter;
+        initComponents();
+    }
+
+    private void initComponents() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -60,19 +68,18 @@ public class RicercaIscrittoPanel extends JPanel {
                     return;
                 }
 
-                Optional<Iscritto> iscritto = IscrittiManager.getInstance().cercaIscritto(codice);
-                if (iscritto.isPresent()) {
-                    Iscritto i = iscritto.get();
+                Iscritto iscritto = presenter.cercaIscritto(codice);
+                if (iscritto != null) {
                     StringBuilder sb = new StringBuilder();
-                    sb.append("Nome: ").append(i.getNome()).append("\n");
-                    sb.append("Cognome: ").append(i.getCognome()).append("\n");
-                    sb.append("Codice: ").append(i.getCodiceIdentificativo()).append("\n");
+                    sb.append("Nome: ").append(iscritto.getNome()).append("\n");
+                    sb.append("Cognome: ").append(iscritto.getCognome()).append("\n");
+                    sb.append("Codice: ").append(iscritto.getCodiceIdentificativo()).append("\n");
                     sb.append("\nAbbonamenti attivi:\n");
-                    for (Abbonamento a : i.getAbbonamentiAttivi()) {
+                    for (Abbonamento a : presenter.getAbbonamentiAttivi(iscritto)) {
                         sb.append("- ").append(a.toString()).append("\n");
                     }
                     sb.append("\nStorico abbonamenti:\n");
-                    for (Abbonamento a : i.getStoricoAbbonamenti()) {
+                    for (Abbonamento a : presenter.getStoricoAbbonamenti(iscritto)) {
                         sb.append("- ").append(a.toString()).append("\n");
                     }
                     risultatoArea.setText(sb.toString());

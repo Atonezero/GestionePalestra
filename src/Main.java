@@ -1,8 +1,11 @@
 import view.MainFrame;
+import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        MainFrame frame = new MainFrame();
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            MainFrame frame = new MainFrame();
+            frame.setVisible(true);
+        });
     }
-}
+} 

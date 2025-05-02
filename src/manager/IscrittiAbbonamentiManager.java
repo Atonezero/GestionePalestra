@@ -2,10 +2,13 @@ package manager;
 
 import model.Iscritto;
 import model.Abbonamento;
+import model.AbbonamentoMensile;
+import model.AbbonamentoAnnuale;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 public class IscrittiAbbonamentiManager {
     private static IscrittiAbbonamentiManager instance;
@@ -41,11 +44,16 @@ public class IscrittiAbbonamentiManager {
         }
     }
 
-    public void aggiungiIscrittoConAbbonamento(Iscritto iscritto, Abbonamento abbonamento) {
+    public void aggiungiIscrittoConAbbonamento(Iscritto iscritto, String tipoAbbonamento, LocalDate dataInizio) {
         iscrittiManager.aggiungiIscritto(iscritto);
-        abbonamento.setCodiceIscritto(iscritto.getCodiceIdentificativo());
-        abbonamentiManager.aggiungiAbbonamento(abbonamento);
-        iscrittiAbbonamentiMap.put(iscritto, List.of(abbonamento));
+        
+        if (tipoAbbonamento.equals("Mensile")) {
+            abbonamentiManager.aggiungiAbbonamentoMensile(iscritto, dataInizio);
+        } else {
+            abbonamentiManager.aggiungiAbbonamentoAnnuale(iscritto, dataInizio);
+        }
+        
+        aggiornaMappa();
     }
 
     public List<Abbonamento> getAbbonamentiPerIscritto(Iscritto iscritto) {

@@ -2,6 +2,8 @@ package manager;
 
 import model.Iscritto;
 import model.Abbonamento;
+import model.AbbonamentoMensile;
+import model.AbbonamentoAnnuale;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -87,9 +89,9 @@ public class CsvManager {
                     
                     Abbonamento abbonamento;
                     if (parts[0].equals("Mensile")) {
-                        abbonamento = new AbbonamentoMensile(dataInizio);
+                        abbonamento = new AbbonamentoMensile(dataInizio, codiceIscritto);
                     } else {
-                        abbonamento = new AbbonamentoAnnuale(dataInizio);
+                        abbonamento = new AbbonamentoAnnuale(dataInizio, codiceIscritto);
                     }
                     abbonamenti.add(abbonamento);
                 }

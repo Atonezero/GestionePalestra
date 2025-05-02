@@ -2,6 +2,7 @@ package view;
 
 import model.Iscritto;
 import manager.IscrittiManager;
+import presenter.MainPresenter;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,8 +14,14 @@ import java.util.List;
 public class VisualizzaIscrittiPanel extends JPanel {
     private JTable iscrittiTable;
     private DefaultTableModel tableModel;
+    private MainPresenter presenter;
 
-    public VisualizzaIscrittiPanel() {
+    public VisualizzaIscrittiPanel(MainPresenter presenter) {
+        this.presenter = presenter;
+        initComponents();
+    }
+
+    private void initComponents() {
         setLayout(new BorderLayout());
 
         // Creazione del modello della tabella
@@ -45,7 +52,7 @@ public class VisualizzaIscrittiPanel extends JPanel {
         tableModel.setRowCount(0);
 
         // Carica gli iscritti
-        List<Iscritto> iscritti = IscrittiManager.getInstance().getTuttiIscritti();
+        List<Iscritto> iscritti = presenter.getTuttiIscritti();
         for (Iscritto iscritto : iscritti) {
             Object[] rowData = {
                 iscritto.getNome(),
