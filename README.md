@@ -21,8 +21,7 @@ Il progetto è organizzato nei seguenti package:
 3. Compilare il progetto
 4. Eseguire la classe `Main` nel package principale
 
-## Funzionalità
-- Gestione iscritti (CRUD)
-- Gestione abbonamenti (mensili e annuali)
-- Visualizzazione abbonamenti attivi e storico
-- Persistenza dei dati su file CSV 
+## Appunti
+- Inserire colori per gli stati degli abbonati
+- Inserire tasto ricarica in visualizza abbonati
+- Migliorare grafica nel possibile
