@@ -4,21 +4,26 @@ import model.Abbonamento;
 import model.AbbonamentoMensile;
 import model.AbbonamentoAnnuale;
 import model.Iscritto;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.IOException;
 
 public class AbbonamentiManager {
     private static AbbonamentiManager instance;
-    private List<Abbonamento> abbonamenti;
-    private final CsvManager csvManager;
+    private final CSVManager csvManager;
+    private final Map<Iscritto, List<Abbonamento>> abbonamenti;
     private final IscrittiManager iscrittiManager;
 
     private AbbonamentiManager() {
-        csvManager = CsvManager.getInstance();
+        this.csvManager = new CSVManager();
+        this.abbonamenti = new HashMap<>();
         iscrittiManager = IscrittiManager.getInstance();
-        abbonamenti = csvManager.caricaAbbonamenti();
+        caricaDati();
     }
 
     public static AbbonamentiManager getInstance() {
@@ -28,39 +33,52 @@ public class AbbonamentiManager {
         return instance;
     }
 
+    private void caricaDati() {
+        try {
+            Map<Iscritto, List<Abbonamento>> dati = csvManager.caricaDati();
+            abbonamenti.clear();
+            abbonamenti.putAll(dati);
+        } catch (IOException e) {
+            System.err.println("Errore nel caricamento dei dati: " + e.getMessage());
+        }
+    }
 
-    public void aggiungiAbbonamentoMensile(Iscritto iscritto, LocalDate dataInizio) {
+    public void aggiungiAbbonamentoMensile(Iscritto iscritto, LocalDate dataInizio) throws IOException {
         Abbonamento abbonamento = new AbbonamentoMensile(dataInizio, iscritto.getCodiceIdentificativo());
         iscritto.aggiungiAbbonamentoAttivo(abbonamento);
-        abbonamenti.add(abbonamento);
-        csvManager.salvaAbbonamenti(abbonamenti);
+        abbonamenti.computeIfAbsent(iscritto, k -> new ArrayList<>()).add(abbonamento);
+        csvManager.salvaDati(abbonamenti);
     }
 
-
-    public void aggiungiAbbonamentoAnnuale(Iscritto iscritto, LocalDate dataInizio) {
+    public void aggiungiAbbonamentoAnnuale(Iscritto iscritto, LocalDate dataInizio) throws IOException {
         Abbonamento abbonamento = new AbbonamentoAnnuale(dataInizio, iscritto.getCodiceIdentificativo());
         iscritto.aggiungiAbbonamentoAttivo(abbonamento);
-        abbonamenti.add(abbonamento);
-        csvManager.salvaAbbonamenti(abbonamenti);
+        abbonamenti.computeIfAbsent(iscritto, k -> new ArrayList<>()).add(abbonamento);
+        csvManager.salvaDati(abbonamenti);
     }
 
-
-    public void terminaAbbonamento(Iscritto iscritto, Abbonamento abbonamento) {
+    public void terminaAbbonamento(Iscritto iscritto, Abbonamento abbonamento) throws IOException {
         iscritto.terminaAbbonamento(abbonamento);
-        csvManager.salvaAbbonamenti(abbonamenti);
+        abbonamenti.computeIfPresent(iscritto, (k, v) -> {
+            v.remove(abbonamento);
+            return v;
+        });
+        csvManager.salvaDati(abbonamenti);
     }
-
 
     public List<Abbonamento> getAbbonamentiAttivi(Iscritto iscritto) {
-        return new ArrayList<>(iscritto.getAbbonamentiAttivi());
+        return new ArrayList<>(abbonamenti.getOrDefault(iscritto, new ArrayList<>()));
     }
-
 
     public List<Abbonamento> getStoricoAbbonamenti(Iscritto iscritto) {
         return new ArrayList<>(iscritto.getStoricoAbbonamenti());
     }
 
     public List<Abbonamento> getTuttiAbbonamenti() {
-        return new ArrayList<>(abbonamenti);
+        List<Abbonamento> tuttiAbbonamenti = new ArrayList<>();
+        for (List<Abbonamento> lista : abbonamenti.values()) {
+            tuttiAbbonamenti.addAll(lista);
+        }
+        return tuttiAbbonamenti;
     }
-} 
+}

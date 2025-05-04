@@ -2,103 +2,74 @@ package manager;
 
 import model.Iscritto;
 import model.Abbonamento;
-import model.AbbonamentoMensile;
-import model.AbbonamentoAnnuale;
+import java.util.*;
 import java.io.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*;
 
+public class CSVManager {
+    private static final String DATA_DIR = "data";
+    private static final String FILE_PATH = DATA_DIR + "/iscritti_abbonamenti.csv";
 
-public class CsvManager {
-    private static CsvManager instance;
-    private static final String ISCRITTI_FILE = "iscritti.csv";
-    private static final String ABBONAMENTI_FILE = "abbonamenti.csv";
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
-
-    private CsvManager() {}
-
-    public static CsvManager getInstance() {
-        if (instance == null) {
-            instance = new CsvManager();
-        }
-        return instance;
+    public CSVManager() {
+        creaDirectoryData();
     }
 
-
-    public void salvaIscritti(List<Iscritto> iscritti) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(ISCRITTI_FILE))) {
-            writer.println("nome,cognome,codiceIdentificativo");
-            for (Iscritto iscritto : iscritti) {
-                writer.println(String.format("%s,%s,%s",
-                    iscritto.getNome(),
-                    iscritto.getCognome(),
-                    iscritto.getCodiceIdentificativo()));
+    private void creaDirectoryData() {
+        try {
+            Path dataPath = Paths.get(DATA_DIR);
+            if (!Files.exists(dataPath)) {
+                Files.createDirectories(dataPath);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Errore nella creazione della directory data: " + e.getMessage());
         }
     }
 
-
-    public List<Iscritto> caricaIscritti() {
-        List<Iscritto> iscritti = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(ISCRITTI_FILE))) {
-            reader.readLine();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    iscritti.add(new Iscritto(parts[0], parts[1], parts[2]));
+    public void salvaDati(Map<Iscritto, List<Abbonamento>> iscrittiAbbonamenti) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
+            for (Map.Entry<Iscritto, List<Abbonamento>> entry : iscrittiAbbonamenti.entrySet()) {
+                Iscritto iscritto = entry.getKey();
+                for (Abbonamento abbonamento : entry.getValue()) {
+                    writer.println(String.format("%s,%s,%s,%s,%s,%s",
+                        iscritto.getNome(),
+                        iscritto.getCognome(),
+                        iscritto.getCodiceIdentificativo(),
+                        abbonamento.getTipo(),
+                        abbonamento.getDataInizio().format(Abbonamento.DATE_FORMATTER),
+                        abbonamento.getDataFine().format(Abbonamento.DATE_FORMATTER)));
                 }
             }
-        } catch (IOException e) {
-        }
-        return iscritti;
-    }
-
-    public void salvaAbbonamenti(List<Abbonamento> abbonamenti) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(ABBONAMENTI_FILE))) {
-            writer.println("tipo,dataInizio,dataFine,codiceIscritto");
-            for (Abbonamento abbonamento : abbonamenti) {
-                writer.println(String.format("%s,%s,%s,%s",
-                    abbonamento.getTipo(),
-                    abbonamento.getDataInizio().format(DATE_FORMATTER),
-                    abbonamento.getDataFine().format(DATE_FORMATTER),
-                    abbonamento.getCodiceIscritto()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-
-    public List<Abbonamento> caricaAbbonamenti() {
-        List<Abbonamento> abbonamenti = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(ABBONAMENTI_FILE))) {
-            // Salta l'header
-            reader.readLine();
+    public Map<Iscritto, List<Abbonamento>> caricaDati() throws IOException {
+        Map<Iscritto, List<Abbonamento>> iscrittiAbbonamenti = new HashMap<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 4) {
-                    LocalDate dataInizio = LocalDate.parse(parts[1], DATE_FORMATTER);
-                    LocalDate dataFine = LocalDate.parse(parts[2], DATE_FORMATTER);
-                    String codiceIscritto = parts[3];
+                if (parts.length == 6) {
+                    Iscritto iscritto = new Iscritto(parts[0], parts[1], parts[2]);
+                    Abbonamento abbonamento = Abbonamento.creaAbbonamento(
+                        parts[3], // tipo
+                        parts[2], // codice iscritto
+                        parts[4], // data inizio
+                        parts[5]  // data fine
+                    );
                     
-                    Abbonamento abbonamento;
-                    if (parts[0].equals("Mensile")) {
-                        abbonamento = new AbbonamentoMensile(dataInizio, codiceIscritto);
-                    } else {
-                        abbonamento = new AbbonamentoAnnuale(dataInizio, codiceIscritto);
+                    if (!iscrittiAbbonamenti.containsKey(iscritto)) {
+                        iscrittiAbbonamenti.put(iscritto, new ArrayList<>());
                     }
-                    abbonamenti.add(abbonamento);
+                    iscrittiAbbonamenti.get(iscritto).add(abbonamento);
                 }
             }
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            // Il file non esiste ancora, verrà creato al primo salvataggio
+            System.out.println("File dei dati non trovato. Verrà creato al primo salvataggio.");
         }
-        return abbonamenti;
+        
+        return iscrittiAbbonamenti;
     }
 }
 

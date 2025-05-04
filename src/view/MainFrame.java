@@ -2,56 +2,74 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import presenter.MainPresenter;
 
 public class MainFrame extends JFrame {
-    private CardLayout cardLayout;
+    private MainPresenter presenter;
     private JPanel mainPanel;
     private JPanel menuPanel;
-    private MainPresenter presenter;
+    private InserisciIscrittoPanel inserisciIscrittoPanel;
+    private AggiungiAbbonamentoPanel aggiungiAbbonamentoPanel;
+    private VisualizzaAbbonamentiPanel visualizzaAbbonamentiPanel;
 
     public MainFrame() {
+        presenter = new MainPresenter();
+        initComponents();
+    }
+
+    private void initComponents() {
         setTitle("Gestione Palestra");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
 
-        // Initialize presenter
-        presenter = new MainPresenter();
+        // Menu Panel
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new FlowLayout());
 
-        // Initialize CardLayout
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-
-        // Create menu
-        menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton btnAggiungiIscritto = new JButton("Aggiungi Iscritto");
-        JButton btnRicercaIscritto = new JButton("Ricerca Iscritto");
-        JButton btnVisualizzaIscritti = new JButton("Visualizza Iscritti");
+        JButton btnInserisciIscritto = new JButton("Inserisci Iscritto");
+        JButton btnAggiungiAbbonamento = new JButton("Aggiungi Abbonamento");
         JButton btnVisualizzaAbbonamenti = new JButton("Visualizza Abbonamenti");
 
-        menuPanel.add(btnAggiungiIscritto);
-        menuPanel.add(btnRicercaIscritto);
-        menuPanel.add(btnVisualizzaIscritti);
+        menuPanel.add(btnInserisciIscritto);
+        menuPanel.add(btnAggiungiAbbonamento);
         menuPanel.add(btnVisualizzaAbbonamenti);
 
-        // Add panels to CardLayout
-        mainPanel.add(new AggiungiIscrittoPanel(presenter), "AGGIUNGI_ISCRITTO");
-        mainPanel.add(new RicercaIscrittoPanel(presenter), "RICERCA_ISCRITTO");
-        mainPanel.add(new VisualizzaIscrittiPanel(presenter), "VISUALIZZA_ISCRITTI");
-        mainPanel.add(new VisualizzaAbbonamentiPanel(presenter), "VISUALIZZA_ABBONAMENTI");
+        // Main Panel
+        mainPanel = new JPanel(new CardLayout());
+        inserisciIscrittoPanel = new InserisciIscrittoPanel(presenter);
+        aggiungiAbbonamentoPanel = new AggiungiAbbonamentoPanel(presenter);
+        visualizzaAbbonamentiPanel = new VisualizzaAbbonamentiPanel(presenter);
 
-        // Button event handling
-        btnAggiungiIscritto.addActionListener(e -> cardLayout.show(mainPanel, "AGGIUNGI_ISCRITTO"));
-        btnRicercaIscritto.addActionListener(e -> cardLayout.show(mainPanel, "RICERCA_ISCRITTO"));
-        btnVisualizzaIscritti.addActionListener(e -> cardLayout.show(mainPanel, "VISUALIZZA_ISCRITTI"));
-        btnVisualizzaAbbonamenti.addActionListener(e -> cardLayout.show(mainPanel, "VISUALIZZA_ABBONAMENTI"));
+        mainPanel.add(inserisciIscrittoPanel, "InserisciIscritto");
+        mainPanel.add(aggiungiAbbonamentoPanel, "AggiungiAbbonamento");
+        mainPanel.add(visualizzaAbbonamentiPanel, "VisualizzaAbbonamenti");
 
-        // Window layout
+        // Action Listeners
+        btnInserisciIscritto.addActionListener(e -> {
+            CardLayout cl = (CardLayout) mainPanel.getLayout();
+            cl.show(mainPanel, "InserisciIscritto");
+        });
+
+        btnAggiungiAbbonamento.addActionListener(e -> {
+            CardLayout cl = (CardLayout) mainPanel.getLayout();
+            cl.show(mainPanel, "AggiungiAbbonamento");
+        });
+
+        btnVisualizzaAbbonamenti.addActionListener(e -> {
+            CardLayout cl = (CardLayout) mainPanel.getLayout();
+            cl.show(mainPanel, "VisualizzaAbbonamenti");
+        });
+
+        // Layout
         setLayout(new BorderLayout());
         add(menuPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new MainFrame().setVisible(true);
+        });
     }
 }

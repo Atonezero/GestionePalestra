@@ -9,20 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.io.IOException;
 
 public class IscrittiAbbonamentiManager {
     private static IscrittiAbbonamentiManager instance;
-    private final Map<Iscritto, List<Abbonamento>> iscrittiAbbonamentiMap;
-    private final CsvManager csvManager;
+    private final CSVManager csvManager;
+    private final Map<Iscritto, List<Abbonamento>> iscrittiAbbonamenti;
     private final IscrittiManager iscrittiManager;
     private final AbbonamentiManager abbonamentiManager;
 
     private IscrittiAbbonamentiManager() {
-        csvManager = CsvManager.getInstance();
-        iscrittiManager = IscrittiManager.getInstance();
-        abbonamentiManager = AbbonamentiManager.getInstance();
-        iscrittiAbbonamentiMap = new HashMap<>();
-        initializeMap();
+        this.csvManager = new CSVManager();
+        this.iscrittiAbbonamenti = new HashMap<>();
+        this.iscrittiManager = IscrittiManager.getInstance();
+        this.abbonamentiManager = AbbonamentiManager.getInstance();
+        caricaDati();
     }
 
     public static IscrittiAbbonamentiManager getInstance() {
@@ -32,40 +33,39 @@ public class IscrittiAbbonamentiManager {
         return instance;
     }
 
-    private void initializeMap() {
-        List<Iscritto> iscritti = iscrittiManager.getTuttiIscritti();
-        List<Abbonamento> abbonamenti = abbonamentiManager.getTuttiAbbonamenti();
-        
-        for (Iscritto iscritto : iscritti) {
-            List<Abbonamento> abbonamentiIscritto = abbonamenti.stream()
-                .filter(a -> a.getCodiceIscritto().equals(iscritto.getCodiceIdentificativo()))
-                .collect(Collectors.toList());
-            iscrittiAbbonamentiMap.put(iscritto, abbonamentiIscritto);
+    private void caricaDati() {
+        try {
+            Map<Iscritto, List<Abbonamento>> dati = csvManager.caricaDati();
+            iscrittiAbbonamenti.clear();
+            iscrittiAbbonamenti.putAll(dati);
+        } catch (IOException e) {
+            System.err.println("Errore nel caricamento dei dati: " + e.getMessage());
         }
     }
 
-    public void aggiungiIscrittoConAbbonamento(Iscritto iscritto, String tipoAbbonamento, LocalDate dataInizio) {
+    public void aggiungiIscrittoConAbbonamento(Iscritto iscritto, String tipoAbbonamento, LocalDate dataInizio) throws IOException {
         iscrittiManager.aggiungiIscritto(iscritto);
-        
+    
         if (tipoAbbonamento.equals("Mensile")) {
             abbonamentiManager.aggiungiAbbonamentoMensile(iscritto, dataInizio);
         } else {
             abbonamentiManager.aggiungiAbbonamentoAnnuale(iscritto, dataInizio);
         }
-        
+    
         aggiornaMappa();
     }
+    
 
     public List<Abbonamento> getAbbonamentiPerIscritto(Iscritto iscritto) {
-        return iscrittiAbbonamentiMap.getOrDefault(iscritto, List.of());
+        return iscrittiAbbonamenti.getOrDefault(iscritto, List.of());
     }
 
     public Map<Iscritto, List<Abbonamento>> getTuttiIscrittiConAbbonamenti() {
-        return new HashMap<>(iscrittiAbbonamentiMap);
+        return new HashMap<>(iscrittiAbbonamenti);
     }
 
     public void aggiornaMappa() {
-        iscrittiAbbonamentiMap.clear();
-        initializeMap();
+        iscrittiAbbonamenti.clear();
+        caricaDati();
     }
 }
