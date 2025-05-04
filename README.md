@@ -20,9 +20,3 @@ Il progetto è organizzato nei seguenti package:
 2. Aprire il progetto in un IDE Java (Eclipse, IntelliJ, ecc.)
 3. Compilare il progetto
 4. Eseguire la classe `Main` nel package principale
-
-## Funzionalità
-- Gestione iscritti (CRUD)
-- Gestione abbonamenti (mensili e annuali)
-- Visualizzazione abbonamenti attivi e storico
-- Persistenza dei dati su file CSV 
