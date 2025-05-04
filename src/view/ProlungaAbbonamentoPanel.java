@@ -30,7 +30,6 @@ public class ProlungaAbbonamentoPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Codice iscritto
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Codice Iscritto:"), gbc);
@@ -40,17 +39,15 @@ public class ProlungaAbbonamentoPanel extends JPanel {
         codiceIscrittoField = new JTextField(20);
         add(codiceIscrittoField, gbc);
 
-        // Tipo abbonamento
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Tipo Abbonamento:"), gbc);
 
         gbc.gridx = 1;
-        String[] tipiAbbonamento = {"MENSILE", "ANNUALE"};
+        String[] tipiAbbonamento = { "MENSILE", "ANNUALE" };
         tipoAbbonamentoCombo = new JComboBox<>(tipiAbbonamento);
         add(tipoAbbonamentoCombo, gbc);
 
-        // Data inizio
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Data Inizio:"), gbc);
@@ -60,7 +57,6 @@ public class ProlungaAbbonamentoPanel extends JPanel {
         dataInizioChooser.setDateFormatString("dd/MM/yyyy");
         add(dataInizioChooser, gbc);
 
-        // Pulsante prolunga
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
@@ -69,7 +65,6 @@ public class ProlungaAbbonamentoPanel extends JPanel {
         prolungaButton.addActionListener(e -> prolungaAbbonamento());
         add(prolungaButton, gbc);
 
-        // Label risultato
         gbc.gridy = 4;
         risultatoLabel = new JLabel("");
         risultatoLabel.setForeground(Color.RED);
@@ -129,4 +124,4 @@ public class ProlungaAbbonamentoPanel extends JPanel {
             risultatoLabel.setText("Errore nel prolungamento dell'abbonamento");
         }
     }
-} 
+}

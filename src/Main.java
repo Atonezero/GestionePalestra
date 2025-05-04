@@ -8,6 +8,4 @@ public class Main {
             frame.setVisible(true);
         });
     }
-} 
-
-//Il programma funziona, voglio migliorare la grafica e aggiungere funzionalita di abbonamenti 
+}

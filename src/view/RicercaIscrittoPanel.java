@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
-/**
- * Pannello per la ricerca di un iscritto
- */
+
 public class RicercaIscrittoPanel extends JPanel {
     private JTextField codiceField;
     private JButton cercaButton;
@@ -29,7 +27,7 @@ public class RicercaIscrittoPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Campo codice identificativo
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Codice Identificativo:"), gbc);
@@ -38,12 +36,12 @@ public class RicercaIscrittoPanel extends JPanel {
         codiceField = new JTextField(20);
         add(codiceField, gbc);
 
-        // Pulsante cerca
+        
         gbc.gridx = 2;
         cercaButton = new JButton("Cerca");
         add(cercaButton, gbc);
 
-        // Area risultato
+        
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 3;
@@ -54,7 +52,7 @@ public class RicercaIscrittoPanel extends JPanel {
         risultatoArea.setEditable(false);
         add(new JScrollPane(risultatoArea), gbc);
 
-        // Gestione evento cerca
+        
         cercaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -21,7 +21,6 @@ public class InserisciIscrittoPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Nome
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Nome:"), gbc);
@@ -30,7 +29,6 @@ public class InserisciIscrittoPanel extends JPanel {
         nomeField = new JTextField(20);
         add(nomeField, gbc);
 
-        // Cognome
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Cognome:"), gbc);
@@ -39,7 +37,6 @@ public class InserisciIscrittoPanel extends JPanel {
         cognomeField = new JTextField(20);
         add(cognomeField, gbc);
 
-        // Codice
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Codice Identificativo:"), gbc);
@@ -48,7 +45,6 @@ public class InserisciIscrittoPanel extends JPanel {
         codiceField = new JTextField(20);
         add(codiceField, gbc);
 
-        // Pulsante Inserisci
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
@@ -56,7 +52,6 @@ public class InserisciIscrittoPanel extends JPanel {
         inserisciButton.addActionListener(e -> inserisciIscritto());
         add(inserisciButton, gbc);
 
-        // Label risultato
         gbc.gridy = 4;
         resultLabel = new JLabel("");
         add(resultLabel, gbc);
@@ -82,4 +77,4 @@ public class InserisciIscrittoPanel extends JPanel {
             resultLabel.setText("Errore: " + e.getMessage());
         }
     }
-} 
+}

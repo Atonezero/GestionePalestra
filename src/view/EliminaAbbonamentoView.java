@@ -26,7 +26,6 @@ public class EliminaAbbonamentoView extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Codice iscritto
         gbc.gridx = 0;
         gbc.gridy = 0;
         mainPanel.add(new JLabel("Codice Iscritto:"), gbc);
@@ -36,7 +35,6 @@ public class EliminaAbbonamentoView extends JFrame {
         codiceIscrittoField = new JTextField(20);
         mainPanel.add(codiceIscrittoField, gbc);
 
-        // Codice abbonamento
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.NONE;
@@ -47,7 +45,6 @@ public class EliminaAbbonamentoView extends JFrame {
         codiceAbbonamentoField = new JTextField(20);
         mainPanel.add(codiceAbbonamentoField, gbc);
 
-        // Pulsante elimina
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
@@ -61,7 +58,6 @@ public class EliminaAbbonamentoView extends JFrame {
         });
         mainPanel.add(eliminaButton, gbc);
 
-        // Label risultato
         gbc.gridy = 3;
         risultatoLabel = new JLabel("");
         risultatoLabel.setForeground(Color.RED);
@@ -75,8 +71,8 @@ public class EliminaAbbonamentoView extends JFrame {
         String codiceAbbonamento = codiceAbbonamentoField.getText().trim();
 
         if (codiceIscritto.isEmpty() || codiceAbbonamento.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Inserisci sia il codice iscritto che il codice abbonamento", 
-                "Errore", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Inserisci sia il codice iscritto che il codice abbonamento",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -93,13 +89,13 @@ public class EliminaAbbonamentoView extends JFrame {
         }
 
         if (presenter.eliminaAbbonamento(iscritto, abbonamento)) {
-            JOptionPane.showMessageDialog(this, "Abbonamento eliminato con successo", 
-                "Successo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Abbonamento eliminato con successo",
+                    "Successo", JOptionPane.INFORMATION_MESSAGE);
             codiceIscrittoField.setText("");
             codiceAbbonamentoField.setText("");
         } else {
-            JOptionPane.showMessageDialog(this, "Errore durante l'eliminazione dell'abbonamento", 
-                "Errore", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Errore durante l'eliminazione dell'abbonamento",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
         }
     }
-} 
+}

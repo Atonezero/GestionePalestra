@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public abstract class Abbonamento {
+public class Abbonamento {
     protected LocalDate dataInizio;
     protected LocalDate dataFine;
     protected String codiceIscritto;
@@ -14,7 +14,7 @@ public abstract class Abbonamento {
         this.codiceIscritto = codiceIscritto;
     }
 
-    public abstract String getTipo();
+    public String getTipo() {};
 
     public LocalDate getDataInizio() {
         return dataInizio;

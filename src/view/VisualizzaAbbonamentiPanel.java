@@ -10,9 +10,7 @@ import presenter.MainPresenter;
 import model.Iscritto;
 import model.Abbonamento;
 
-/**
- * Pannello per la visualizzazione degli abbonamenti
- */
+
 public class VisualizzaAbbonamentiPanel extends JPanel {
     private MainPresenter presenter;
     private JTextField searchField;
@@ -31,7 +29,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        // Pannello di ricerca
+        
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchField = new JTextField(20);
         JButton searchButton = new JButton("Cerca");
@@ -41,10 +39,10 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         searchPanel.add(searchButton);
         add(searchPanel, BorderLayout.NORTH);
 
-        // Pannello principale con tabelle
+        
         JPanel mainPanel = new JPanel(new GridLayout(2, 1));
 
-        // Tabella iscritti
+        
         iscrittiModel = new DefaultTableModel(new String[]{"Nome", "Cognome", "Codice"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -66,7 +64,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         JScrollPane iscrittiScroll = new JScrollPane(iscrittiTable);
         mainPanel.add(iscrittiScroll);
 
-        // Tabella abbonamenti
+        
         abbonamentiModel = new DefaultTableModel(new String[]{"Tipo", "Data Inizio", "Data Fine", "Stato"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -80,7 +78,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // Pannello pulsanti
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         eliminaButton = new JButton("Elimina");
         eliminaButton.addActionListener(e -> eliminaSelezionato());
@@ -93,7 +91,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         if (!codice.isEmpty()) {
             Iscritto iscritto = presenter.cercaIscritto(codice);
             if (iscritto != null) {
-                // Seleziona l'iscritto nella tabella
+                
                 for (int i = 0; i < iscrittiModel.getRowCount(); i++) {
                     if (iscrittiModel.getValueAt(i, 2).equals(codice)) {
                         iscrittiTable.setRowSelectionInterval(i, i);
@@ -181,7 +179,7 @@ class DettagliIscrittoDialog extends JDialog {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Informazioni iscritto
+        
         JPanel infoPanel = new JPanel(new GridLayout(3, 2));
         infoPanel.add(new JLabel("Nome:"));
         infoPanel.add(new JLabel(iscritto.getNome()));
@@ -191,7 +189,7 @@ class DettagliIscrittoDialog extends JDialog {
         infoPanel.add(new JLabel(iscritto.getCodiceIdentificativo()));
         mainPanel.add(infoPanel, BorderLayout.NORTH);
 
-        // Tabella abbonamenti
+        
         DefaultTableModel model = new DefaultTableModel(new String[]{"Tipo", "Data Inizio", "Data Fine", "Stato"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {

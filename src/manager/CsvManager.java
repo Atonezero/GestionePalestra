@@ -65,14 +65,9 @@ public class CSVManager {
                 }
             }
         } catch (FileNotFoundException e) {
-            // Il file non esiste ancora, verrà creato al primo salvataggio
             System.out.println("File dei dati non trovato. Verrà creato al primo salvataggio.");
         }
         
         return iscrittiAbbonamenti;
     }
 }
-
-//ManagerCsv salva sul file CSV abbonamenti e iscritti separatamente, uso del HashMap per aggiungere iscritti
-//e abbonamenti contemporaneamente,aggiungere ad ogni nuova iscrizione, caricamento automatico all' avvio.
-//Crea una nuova classe che si occupi di gestire un HashMap con Iscritto, e Storico Abbonamenti, ovvero un Array list di abbonamenti

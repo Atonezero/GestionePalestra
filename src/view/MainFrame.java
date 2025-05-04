@@ -23,7 +23,6 @@ public class MainFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
 
-        // Menu Panel
         menuPanel = new JPanel();
         menuPanel.setLayout(new FlowLayout());
 
@@ -35,7 +34,6 @@ public class MainFrame extends JFrame {
         menuPanel.add(btnAggiungiAbbonamento);
         menuPanel.add(btnVisualizzaAbbonamenti);
 
-        // Main Panel
         mainPanel = new JPanel(new CardLayout());
         inserisciIscrittoPanel = new InserisciIscrittoPanel(presenter);
         aggiungiAbbonamentoPanel = new AggiungiAbbonamentoPanel(presenter);
@@ -45,7 +43,6 @@ public class MainFrame extends JFrame {
         mainPanel.add(aggiungiAbbonamentoPanel, "AggiungiAbbonamento");
         mainPanel.add(visualizzaAbbonamentiPanel, "VisualizzaAbbonamenti");
 
-        // Action Listeners
         btnInserisciIscritto.addActionListener(e -> {
             CardLayout cl = (CardLayout) mainPanel.getLayout();
             cl.show(mainPanel, "InserisciIscritto");
@@ -61,7 +58,6 @@ public class MainFrame extends JFrame {
             cl.show(mainPanel, "VisualizzaAbbonamenti");
         });
 
-        // Layout
         setLayout(new BorderLayout());
         add(menuPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);

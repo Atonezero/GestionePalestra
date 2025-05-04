@@ -16,7 +16,7 @@ import java.io.IOException;
 public class AbbonamentiManager {
     private static AbbonamentiManager instance;
     private final CSVManager csvManager;
-    private final Map<Iscritto, List<Abbonamento>> abbonamenti;
+    private final HashMap<Iscritto, List<Abbonamento>> abbonamenti;
     private final IscrittiManager iscrittiManager;
 
     private AbbonamentiManager() {
