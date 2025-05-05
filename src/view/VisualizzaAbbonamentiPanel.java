@@ -10,7 +10,6 @@ import presenter.MainPresenter;
 import model.Iscritto;
 import model.Abbonamento;
 
-
 public class VisualizzaAbbonamentiPanel extends JPanel {
     private MainPresenter presenter;
     private JTextField searchField;
@@ -30,7 +29,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        
+        // Pannello di ricerca
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchField = new JTextField(20);
         JButton searchButton = new JButton("Cerca");
@@ -40,10 +39,10 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         searchPanel.add(searchButton);
         add(searchPanel, BorderLayout.NORTH);
 
-        
+        // Pannello principale con le tabelle
         JPanel mainPanel = new JPanel(new GridLayout(2, 1));
 
-        
+        // Tabella iscritti
         iscrittiModel = new DefaultTableModel(new String[]{"Nome", "Cognome", "Codice"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -65,7 +64,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         JScrollPane iscrittiScroll = new JScrollPane(iscrittiTable);
         mainPanel.add(iscrittiScroll);
 
-        
+        // Tabella abbonamenti
         abbonamentiModel = new DefaultTableModel(new String[]{"Tipo", "Data Inizio", "Data Fine", "Stato"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -74,12 +73,16 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         };
         abbonamentiTable = new JTable(abbonamentiModel);
         abbonamentiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Imposta il renderer personalizzato
+        abbonamentiTable.setDefaultRenderer(Object.class, new StatoAbbonamentoRenderer());
+
         JScrollPane abbonamentiScroll = new JScrollPane(abbonamentiTable);
         mainPanel.add(abbonamentiScroll);
 
         add(mainPanel, BorderLayout.CENTER);
 
-        
+        // Pannello pulsanti
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         eliminaButton = new JButton("Elimina");
         ricaricaButton = new JButton("Ricarica");
@@ -95,7 +98,6 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         if (!codice.isEmpty()) {
             Iscritto iscritto = presenter.cercaIscritto(codice);
             if (iscritto != null) {
-                
                 for (int i = 0; i < iscrittiModel.getRowCount(); i++) {
                     if (iscrittiModel.getValueAt(i, 2).equals(codice)) {
                         iscrittiTable.setRowSelectionInterval(i, i);
@@ -113,9 +115,9 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         iscrittiModel.setRowCount(0);
         for (Iscritto iscritto : presenter.getTuttiIscritti()) {
             iscrittiModel.addRow(new Object[]{
-                iscritto.getNome(),
-                iscritto.getCognome(),
-                iscritto.getCodiceIdentificativo()
+                    iscritto.getNome(),
+                    iscritto.getCognome(),
+                    iscritto.getCodiceIdentificativo()
             });
         }
     }
@@ -126,22 +128,18 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         if (iscritto != null) {
             for (Abbonamento abbonamento : presenter.getAbbonamenti(iscritto)) {
                 String stato;
-                Color colore;
                 if (abbonamento.isScaduto()) {
                     stato = "SCADUTO";
-                    colore = Color.RED;
                 } else if (abbonamento.isAttivo()) {
                     stato = "ATTIVO";
-                    colore = Color.GREEN;
                 } else {
                     stato = "FUTURO";
-                    colore = Color.YELLOW;
                 }
                 abbonamentiModel.addRow(new Object[]{
-                    abbonamento.getTipo(),
-                    abbonamento.getDataInizio().format(Abbonamento.DATE_FORMATTER),
-                    abbonamento.getDataFine().format(Abbonamento.DATE_FORMATTER),
-                    stato
+                        abbonamento.getTipo(),
+                        abbonamento.getDataInizio().format(Abbonamento.DATE_FORMATTER),
+                        abbonamento.getDataFine().format(Abbonamento.DATE_FORMATTER),
+                        stato
                 });
             }
         }
@@ -172,56 +170,8 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
             }
         }
     }
+
     private void ricaricaPagina() {
         aggiornaIscrittiTable();
     }
 }
-
-class DettagliIscrittoDialog extends JDialog {
-    public DettagliIscrittoDialog(Iscritto iscritto, MainPresenter presenter) {
-        setTitle("Dettagli Iscritto");
-        setSize(400, 300);
-        setLocationRelativeTo(null);
-        setModal(true);
-
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
-        
-        JPanel infoPanel = new JPanel(new GridLayout(3, 2));
-        infoPanel.add(new JLabel("Nome:"));
-        infoPanel.add(new JLabel(iscritto.getNome()));
-        infoPanel.add(new JLabel("Cognome:"));
-        infoPanel.add(new JLabel(iscritto.getCognome()));
-        infoPanel.add(new JLabel("Codice:"));
-        infoPanel.add(new JLabel(iscritto.getCodiceIdentificativo()));
-        mainPanel.add(infoPanel, BorderLayout.NORTH);
-
-        
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Tipo", "Data Inizio", "Data Fine", "Stato"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        JTable table = new JTable(model);
-        for (Abbonamento abbonamento : presenter.getAbbonamenti(iscritto)) {
-            String stato;
-            if (abbonamento.isScaduto()) {
-                stato = "SCADUTO";
-            } else if (abbonamento.isAttivo()) {
-                stato = "ATTIVO";
-            } else {
-                stato = "FUTURO";
-            }
-            model.addRow(new Object[]{
-                abbonamento.getTipo(),
-                abbonamento.getDataInizio(),
-                abbonamento.getDataFine(),
-                stato
-            });
-        }
-        mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        add(mainPanel);
-    }
-} 
