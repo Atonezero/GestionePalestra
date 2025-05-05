@@ -14,7 +14,9 @@ public class Abbonamento {
         this.codiceIscritto = codiceIscritto;
     }
 
-    public String getTipo() {};
+    public String getTipo() {
+        return "";
+    };
 
     public LocalDate getDataInizio() {
         return dataInizio;

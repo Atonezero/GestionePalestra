@@ -19,6 +19,7 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
     private DefaultTableModel iscrittiModel;
     private DefaultTableModel abbonamentiModel;
     private JButton eliminaButton;
+    private JButton ricaricaButton;
 
     public VisualizzaAbbonamentiPanel(MainPresenter presenter) {
         this.presenter = presenter;
@@ -81,7 +82,10 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         eliminaButton = new JButton("Elimina");
+        ricaricaButton = new JButton("Ricarica");
         eliminaButton.addActionListener(e -> eliminaSelezionato());
+        ricaricaButton.addActionListener(e -> ricaricaPagina());
+        buttonPanel.add(ricaricaButton);
         buttonPanel.add(eliminaButton);
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -167,6 +171,9 @@ public class VisualizzaAbbonamentiPanel extends JPanel {
                 abbonamentiModel.setRowCount(0);
             }
         }
+    }
+    private void ricaricaPagina() {
+        aggiornaIscrittiTable();
     }
 }
 
