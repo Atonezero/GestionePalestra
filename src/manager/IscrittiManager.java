@@ -52,11 +52,12 @@ public class IscrittiManager {
         return removed;
     }
 
-    public Optional<Iscritto> cercaIscritto(String codiceIdentificativo) {
-        return iscritti.stream()
-                .filter(i -> i.getCodiceIdentificativo().equals(codiceIdentificativo))
-                .findFirst();
-    }
+	public Iscritto cercaIscritto(String codiceIdentificativo) {
+ 	   return iscritti.stream()
+  	          .filter(i -> i.getCodiceIdentificativo().equals(codiceIdentificativo))
+   	          .findFirst()
+    	          .orElse(null);  // restituisce null se non trova nulla
+	}
 
     public List<Iscritto> getTuttiIscritti() {
         return new ArrayList<>(iscritti);
